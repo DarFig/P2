@@ -5,19 +5,18 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
 public class Gestor {
-	final static int waitT = 500;
+	final static int waitT = 1000;
 	static PrintWriter in;
 	//static PrintWriter err;
 	static BufferedReader out;
 	static Process process;
 	static String stringTask, stringData;
-	static String[][] listaTareas = new String[4][1000];
+	public static String[][] listaTareas = new String[4][1000];
 	
-	public Gestor(){
-		
-	}
+	public Gestor(){}
+	
 	public static void start() {
-		//lanzar ws3270 y llegar hasta tareas.c
+		//lanzar wc3270 y llegar hasta tareas.c
 		try {
 			process = Runtime.getRuntime().exec("C:/Program Files/wc3270/ws3270 155.210.152.51:101");
 			in = new PrintWriter(new OutputStreamWriter(process.getOutputStream()));
@@ -25,7 +24,7 @@ public class Gestor {
 			out = new BufferedReader(new InputStreamReader(process.getInputStream()));
 			
 			try {
-				Thread.sleep(waitT * 2);
+				Thread.sleep(waitT);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -43,7 +42,7 @@ public class Gestor {
 			try {
 				//hay que esperar tareas.c
 				//se pude ir probando
-				Thread.sleep(waitT * 10);
+				Thread.sleep(waitT * 5);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -61,12 +60,12 @@ public class Gestor {
 			String cadena;
 			boolean noTerminado = false;
 			while (!(cadena = out.readLine()).equals("ok")) {
-				if (cadena.length() >= 5 && cadena.substring(0, 5).equals("data:")) {
+				if (cadena.length() >= 5 && cadena.substring(0, 5).equals("data:")) 
 					stringData += cadena + "\n";
-				} else if (cadena.length() >= 4 && (cadena.charAt(0) != 'U' || cadena.charAt(4) != 'U')) {
+				else if (cadena.length() >= 4 && (cadena.charAt(0) != 'U' || cadena.charAt(4) != 'U')) 
 					// fallo de ejecucion se repite
 					noTerminado = true;
-				}
+				
 			}
 			if (noTerminado) {
 				try {
@@ -84,21 +83,7 @@ public class Gestor {
 	public void runOnce(){
 		getTareas();
 		setlistaTareas();
-		for (int i = 0; i < listaTareas[0].length; i++) {
-			for (int j = 0; j < listaTareas.length; j++) {
-				if (listaTareas[j][i] != null){
-					System.out.println(i + "-" + j + "--- " + listaTareas[j][i]);
-					if (j==3)
-						System.out.println("================");
-				}
-			}
-			
-		}
-		try {
-			Thread.sleep(waitT * 4);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		
 	}
 	public static void newEspecificTask(String date, String name, String description) {
 		//envia una nueva tarea especifica
@@ -174,11 +159,15 @@ public class Gestor {
 			for (int i = 0; i < aux.length; i++) {
 				
 				aux2 = aux[i].split(" ");
-				int nTask = Integer.parseInt(aux2[2].substring(0,aux2[2].length() - 1));
-				listaTareas[0][nTask] = aux2[4];// date
-				listaTareas[1][nTask] = aux2[5];// name
-				listaTareas[2][nTask] = aux2[6];// description
-				listaTareas[3][nTask] = aux2[3];// SPECIFIC o GENERAL
+				int numTarea = Integer.parseInt(aux2[2].substring(0,aux2[2].length() - 1));
+				// date(ddmm)
+				listaTareas[0][numTarea] = aux2[4];
+				// name o nada
+				listaTareas[1][numTarea] = aux2[5];
+				// description
+				listaTareas[2][numTarea] = aux2[6];
+				// SPECIFIC o GENERAL
+				listaTareas[3][numTarea] = aux2[3];
 			}
 			
 		}
