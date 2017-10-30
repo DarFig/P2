@@ -4,43 +4,18 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
-public class Practica2 {
+public class Gestor {
 	final static int waitT = 500;
 	static PrintWriter in;
 	//static PrintWriter err;
 	static BufferedReader out;
 	static Process process;
 	static String stringTask, stringData;
-	static String[][] listaTareas = new String[4][100];
-
-	public static void main(String[] args) {
-		start();
-		//newEspecificTask("0101", "sda", "asdads");
-		//newGeneralTask("0201", "asdad");
-		//newGeneralTask("1202", "xxxd");
-		
-		viewTask();
-		getTareas();
-		setlistaTareas();
-		for (int i = 0; i < listaTareas[0].length; i++) {
-			for (int j = 0; j < listaTareas.length; j++) {
-				if (listaTareas[j][i] != null){
-					System.out.println(i + "-" + j + "--- " + listaTareas[j][i]);
-					if (j==3)
-						System.out.println("================");
-				}
-			}
-			
-		}
-		try {
-			Thread.sleep(waitT * 4);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+	static String[][] listaTareas = new String[4][1000];
+	
+	public Gestor(){
 		
 	}
-
-	
 	public static void start() {
 		//lanzar ws3270 y llegar hasta tareas.c
 		try {
@@ -106,7 +81,25 @@ public class Practica2 {
 		}
 	}
 
-	
+	public void runOnce(){
+		getTareas();
+		setlistaTareas();
+		for (int i = 0; i < listaTareas[0].length; i++) {
+			for (int j = 0; j < listaTareas.length; j++) {
+				if (listaTareas[j][i] != null){
+					System.out.println(i + "-" + j + "--- " + listaTareas[j][i]);
+					if (j==3)
+						System.out.println("================");
+				}
+			}
+			
+		}
+		try {
+			Thread.sleep(waitT * 4);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 	public static void newEspecificTask(String date, String name, String description) {
 		//envia una nueva tarea especifica
 		send("clear");
@@ -159,7 +152,7 @@ public class Practica2 {
 		send("enter");
 		send("clear");
 	}
-
+	
 	
 	private static void getTareas() {
 		stringTask = "";
@@ -200,5 +193,4 @@ public class Practica2 {
 		}
 		return noTerminado;
 	}
-
 }
