@@ -11,9 +11,15 @@ public class Gestor {
 	static BufferedReader out;
 	static Process process;
 	static String stringTask, stringData;
-	public static String[][] listaTareas = new String[4][1000];
+	public static String[][] listaTareas = new String[1000][4];
 	
 	public Gestor(){}
+	
+	public void runOnce(){
+		getTareas();
+		setlistaTareas();
+		
+	}
 	
 	public static void start() {
 		//lanzar wc3270 y llegar hasta tareas.c
@@ -80,11 +86,7 @@ public class Gestor {
 		}
 	}
 
-	public void runOnce(){
-		getTareas();
-		setlistaTareas();
-		
-	}
+	
 	public static void newEspecificTask(String date, String name, String description) {
 		//envia una nueva tarea especifica
 		send("clear");
@@ -161,13 +163,13 @@ public class Gestor {
 				aux2 = aux[i].split(" ");
 				int numTarea = Integer.parseInt(aux2[2].substring(0,aux2[2].length() - 1));
 				// date(ddmm)
-				listaTareas[0][numTarea] = aux2[4];
+				listaTareas[numTarea][0] = aux2[4];
 				// name o nada
-				listaTareas[1][numTarea] = aux2[5];
+				listaTareas[numTarea][1] = aux2[5];
 				// description
-				listaTareas[2][numTarea] = aux2[6];
+				listaTareas[numTarea][2] = aux2[6];
 				// SPECIFIC o GENERAL
-				listaTareas[3][numTarea] = aux2[3];
+				listaTareas[numTarea][3] = aux2[3];
 			}
 			
 		}
